@@ -1,0 +1,36 @@
+# main links
+main:
+  - title: "Home"
+    url: https://190726.github.io/
+
+  - title: "About"
+    url: /about/
+
+  - title: "GitHub"
+    url: https://github.com/190726
+
+  # - title: "Projects"
+  #   url: /projects/
+
+  # - title: "Categories"
+  #   url: /categories/
+
+# sidebar navigation (categories)
+# 2022.02.15 sidebar update : simple ver.
+categories:
+  - title: "java-core"
+    url: /categories/java-core/
+  - title: "spring"
+    url: /categories/spring/
+  - title: "java-advanced"
+    url: /categories/java-advanced/
+  - title: "service-develop"
+    url: /categories/service-develop/
+  - title: "tools"
+    url: /categories/tools/
+  - title: "server"
+    url: /categories/server/
+  - title: "database"
+    url: /categories/database/
+    
+    
