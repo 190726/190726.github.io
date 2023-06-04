@@ -12,8 +12,8 @@ permalink: /spring/spring_boot/
 toc: true
 toc_sticky: true
 
-date: 2023-12-31
-last_modified_at: 2023-12-31
+date: 2023-06-04
+last_modified_at: 2023-06-04
 ---
 
 ## 🦥 스프링부트의 핵심 기능
