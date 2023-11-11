@@ -3,7 +3,7 @@ title: "[문화] 온보딩"
 excerpt: "온보딩과 기업문화"
 
 categories:
-  - database
+  - database
 tags:
   - [database]
 
