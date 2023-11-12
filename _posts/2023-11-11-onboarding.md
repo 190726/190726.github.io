@@ -3,11 +3,11 @@ title: "[java] 온보딩"
 excerpt: "온보딩과 기업문화"
 
 categories:
-  - java
+  - java-advanced
 tags:
   - [java]
 
-permalink: /java/onboarding/
+permalink: /java-advanced/onboarding/
 
 toc: true
 toc_sticky: true
