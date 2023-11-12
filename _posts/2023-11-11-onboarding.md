@@ -1,5 +1,5 @@
 ---
-title: "[java] 온보딩"
+title: "[java] 온보딩"
 excerpt: "온보딩과 기업문화"
 
 categories:
