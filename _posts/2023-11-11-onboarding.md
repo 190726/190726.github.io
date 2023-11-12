@@ -1,19 +1,19 @@
 ---
-title: "[문화] 온보딩"
+title: "[java] 온보딩"
 excerpt: "온보딩과 기업문화"
 
 categories:
-  - database
+  - java
 tags:
-  - [database]
+  - [java]
 
-permalink: /database/onboarding/
+permalink: /java/onboarding/
 
 toc: true
 toc_sticky: true
 
-date: 2023-11-12
-last_modified_at: 2023-11-12
+date: 2023-11-11
+last_modified_at: 2023-11-11
 ---
 
 ## 🦥 온보딩과 기업문화
@@ -25,3 +25,11 @@ last_modified_at: 2023-11-12
 > 효율적인 문서화 필요
  1. 여기저기 문서는 많으나 찾기가 어려움 -> 한곳에 모아두고 관리 필요
  2. 문서는 있지만 너무 오래전 정보라 쓸모 없음 -> 현행화(누가? 문서를 읽는 사람이,, 예를들면 신규 입사자)
+
+> 업무 적응 팁
+  1. 상사의 기대치를 파악
+  2. 함께 일할 동료들과 친해지기
+  3. 새로운 정보는 모두 기록
+  4. 프러덕트의 기능 파악
+  5. 팀의 업무 프로세스 파악
+  6. 작은 것부터 시작해 업무 영역 확대
