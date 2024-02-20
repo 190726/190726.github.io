@@ -12,8 +12,8 @@ permalink: /java-core/java-flash/
 toc: true
 toc_sticky: true
 
-date: 2024-03-01
-last_modified_at: 2024-03-01
+date: 2024-02-20
+last_modified_at: 2024-02-20
 ---
 
 ## 자바 문법 모음1
