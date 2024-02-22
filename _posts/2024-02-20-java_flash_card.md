@@ -34,4 +34,10 @@ b >> 5 //0
 ```java
 String.join(",","a","b","c") //a,b,c
 ```
-## 자바 문법 모음3
+## Long, long 을 int로 변환
+```java
+Long a1 = 4L;
+long a2 = 4L;
+int b1 = a1.intValue();
+int b2 = Long.valueOf(a2).intValue();
+```
