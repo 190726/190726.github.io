@@ -16,10 +16,6 @@ date: 2024-03-11
 last_modified_at: 2024-03-11
 ---
 
-
-<img width="568" alt="image" src="https://github.com/190726/190726.github.io/assets/52764723/6163fc1a-8077-43b2-b056-a32661a4de59">
-
-
 ## maven pom.xml 설정
 ```xml
         <!--mockito 코어-->
