@@ -53,3 +53,201 @@ last_modified_at: 2024-03-11
             <scope>test</scope>
         </dependency>
 ```
+
+## target code to Test
+
+```java
+private final ProductRepository productRepository;
+    private final ProductGateway productGateway;
+
+    public ProductService(ProductRepository productRepository, ProductGateway productGateway) {
+        this.productRepository = productRepository;
+        this.productGateway = productGateway;
+    }
+
+    public Product order(String productNumber, int orderQuantity){
+
+         Product product = productRepository.findById(productNumber);
+         Product orderedProduct = product.deductQuantity(orderQuantity); //재고 차감
+
+         productGateway.exchange(orderedProduct);
+         productRepository.update(orderedProduct);
+
+         return orderedProduct;
+    }
+
+    public void orderHealthCheck(String code){
+        if(code.equals("TEST")){
+            Product orderedProduct = new Product("999", 10);
+            productGateway.exchange(orderedProduct);
+            productRepository.update(orderedProduct);
+        }else{
+            throw new IllegalArgumentException("Invalid arguments for Health Check");
+        }
+    }
+
+    public List<Product> sampleProducts() {
+        return Arrays.asList(new Product("001", 100)
+                , new Product("002", 200)
+                , new Product("003", 300));
+    }
+``
+
+## test code
+```java
+@ExtendWith(MockitoExtension.class)
+public class MockTest{
+
+    @Mock //목 객체 생성
+    ProductRepository productRepository;
+
+    @Mock
+    ProductGateway productGateway;
+
+    @InjectMocks //목 객체를 주입 받을 객체
+    ProductService productService;
+
+    @Captor //gateway 로 전달된 product 캡처
+    ArgumentCaptor<Product> exchangedProduct;
+
+    @BeforeEach
+    public void setup() {
+        /*Extension 을 사용 하여 아래 생략*/
+        // MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    @DisplayName("기본 테스트")
+    void test(){
+        //given
+        Product product = new Product("001", 10);
+        given(productRepository.findById("001")).willReturn(product); //BDD style
+        //when
+        Product orderedProduct = productService.order("001", 3);
+        //then
+        assertThat(orderedProduct)
+                .extracting("productNumber", "quantity")
+                .containsExactlyInAnyOrder("001",7);
+        //verify() ->  BDD style
+        then(productGateway).should(times(1)).exchange(exchangedProduct.capture());
+        Product value = exchangedProduct.getValue();// 메서드 내 호출되는 메서드에 전달 파라미터 검증
+        assertThat(value.getQuantity()).isEqualTo(7);
+    }
+
+    @Test
+    @DisplayName("오류 처리 테스트")
+    void exceptionTest(){
+        /*
+         * given
+         */
+        String productNumber = "001";
+        int quantity = 5;
+        int orderQuantity = 10;
+
+        Product product = new Product(productNumber, quantity);
+        given(productRepository.findById(productNumber)).willReturn(product); //BDD style
+        /*
+         * when
+         */
+        Assertions.assertThrows(IllegalStateException.class, () -> productService.order(productNumber, orderQuantity));
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(() -> productService.order(productNumber, orderQuantity))
+                //.havingCause()
+                .withMessage("재고 부족!");
+        assertThatThrownBy(() -> productService.order(productNumber, orderQuantity))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("재고 부족");
+    }
+
+
+    @Test
+    @DisplayName("willThrow 테스트")
+    void exceptionAtGateway(){
+        //given
+        Product product = new Product("001", 10);
+        Product exceptionProduct = new Product("001", 0);
+        given(productRepository.findById("001")).willReturn(product); //BDD style
+        willThrow(new RuntimeException()).given(productGateway).exchange(eq(exceptionProduct));
+        //when
+        try{
+            productService.order("001", 10);
+            fail("runtimeException");
+        }catch(RuntimeException e){
+        }
+        //then
+        then(productRepository).should(never()).update(any());
+    }
+
+    @Test
+    @DisplayName("순서대로 호출되었는지, 내부 호출된 메서드 파라미터 검증하기")
+    void voidTest(){
+        productService.orderHealthCheck("TEST");
+
+        InOrder inOrder = inOrder(productGateway, productRepository);
+        //순서대로 호출되었는지 검증
+        inOrder.verify(productGateway).exchange(any());
+        inOrder.verify(productRepository).update(any());
+
+        //void 메서드 내부에서 호출된 파라미터 검증
+        then(productGateway).should(times(1)).exchange(exchangedProduct.capture());
+        Product capturedProduct = exchangedProduct.getValue();
+        assertThat(capturedProduct)
+                .extracting("productNumber", "quantity")
+                .containsExactlyInAnyOrder("999",10);
+    }
+
+    @Test
+    void listTest(){
+        List<Product> products = productService.sampleProducts();
+        assertThat(products).hasSize(3)
+                .extracting("productNumber", "quantity")
+                .containsExactlyInAnyOrder(tuple("001", 100), tuple("002", 200), tuple("003", 300));
+    }
+
+    @Test
+    void assertJTest(){
+        Product testedProduct = new Product("123", 100);
+        Product testedProduct1 = new Product("001", 50);
+        Product testedProduct2 = new Product("002", 30);
+        //기본 검증
+        assertThat(testedProduct.getProductNumber()).startsWith("1");
+        assertThat(testedProduct.getProductNumber()).contains("2");
+        assertThat(testedProduct.getProductNumber()).endsWith("3");
+
+        //리스트 검증
+        List<Product> lists = Arrays.asList(testedProduct, testedProduct1, testedProduct2);
+        assertThat(lists).allMatch(p -> p.getProductNumber().length()==3)
+                .anyMatch(p -> p.getQuantity() >= 100)
+                .noneMatch(p -> p.getProductNumber().equals("999"));
+        assertThat(lists).map(Product::getProductNumber).contains("123", "001");
+    }
+
+    @Test
+    void numberTest() {
+        BigDecimal num1 = new BigDecimal("3.14");
+        System.out.println(num1.toString());
+        assertThat(num1).isGreaterThan(new BigDecimal("3"));
+
+        int a = 10;
+        assertThat(a).isPositive().isGreaterThan(9).isLessThan(11);
+    }
+
+    @Test
+    void calendarTest(){
+        assertThat(LocalDate.of(2024, 3, 31)).hasYear(2024).hasMonth(Month.MARCH).hasDayOfMonth(31);
+        assertThat(LocalTime.of(23, 17, 59, 5)).hasHour(23)
+                .hasMinute(17)
+                .hasSecond(59)
+                .hasNano(5);
+
+        assertThat(LocalDateTime.of(2000, 12, 31, 23, 17, 59, 5)).hasYear(2000)
+                .hasMonth(Month.DECEMBER)
+                .hasMonthValue(12)
+                .hasDayOfMonth(31)
+                .hasHour(23)
+                .hasMinute(17)
+                .hasSecond(59)
+                .hasNano(5);
+    }
+}
+``
