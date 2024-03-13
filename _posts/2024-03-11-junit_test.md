@@ -304,3 +304,15 @@ class EmpControllerTest {
     }
 }
 ```
+
+## pareameterize test
+1. pom.xml 에 의존성 추가
+```xml
+<dependency>
+  <groupId>org.junit.jupiter</groupId>
+  <artifactId>junit-jupiter-params</artifactId>
+  <version>5.6.2</version>
+  <scope>test</scope>
+</dependency>
+```
+
