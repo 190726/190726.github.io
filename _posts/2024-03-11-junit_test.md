@@ -316,3 +316,40 @@ class EmpControllerTest {
 </dependency>
 ```
 
+```java
+@ParameterizedTest
+    @ValueSource(ints = {2, 4, 6})
+    void parameterizedTest(int index){
+        Assertions.assertThat(index % 2 == 0).isTrue();
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"1:true", "2:true", "3:false"}, delimiter = ':')
+    void csvSourceTest(int index, boolean expected){
+        System.out.println(index);
+        System.out.println(expected);
+    }
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/file.csv") //경로는 /resources 부터 시작
+    void csvFileSource(String name, int amount){
+        System.out.println(name);
+        System.out.println(amount);
+    }
+
+    @ParameterizedTest
+    @MethodSource("generateData")
+    void methodSourceTest(List<Integer> list1, List<String> list2, LocalDate date){
+        System.out.println(list1);
+        System.out.println(date);
+        System.out.println(list2);
+    }
+
+    static Stream<Arguments> generateData(){
+        return Stream.of(
+             Arguments.of(Arrays.asList(1, 2, 3), Arrays.asList("a", "b", "c"), LocalDate.now())
+            ,Arguments.of(Arrays.asList(4, 5, 6), Arrays.asList("d", "e", "f"), LocalDate.of(2024,3,11))
+        );
+    }
+```
+
