@@ -352,8 +352,6 @@ class EmpControllerTest {
         );
     }
 ```
-![image](https://github.com/190726/190726.github.io/assets/52764723/5e3cddba-382f-482b-aa5a-1b71c8d8f193)
-
 
 
 
